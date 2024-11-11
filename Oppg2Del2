@@ -1,0 +1,54 @@
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+mu1 = 20
+mu2 = -30
+
+sigma1 = 1
+sigma2 = 0.5
+
+l1 = 60  
+l2 = 50   
+
+nsim =  10000 # antall simuleringer
+x_verdier = []
+y_verdier = []
+for _ in range(nsim):
+    v1 = np.random.normal(mu1, sigma1) # realisasjon av vinkel 1
+    v2 = np.random.normal(mu2, sigma2) # realisasjon av vinkel 2
+    x = l1 * np.cos(np.pi / 180 * v1) + l2 * np.cos(np.pi / 180 * (v1 + v2)) # realisasjon av x
+    y = l1 * np.sin(np.pi / 180 * v1) + l2 * np.sin(np.pi / 180 * (v1 + v2)) # realisasjon av y
+    x_verdier.append(x)
+    y_verdier.append(y)
+    
+x_verdier = np.array(x_verdier)
+y_verdier = np.array(y_verdier)
+
+# Gjennomsnitt og standardavvik av x og y
+x_snitt = np.mean(x_verdier)
+y_snitt = np.mean(y_verdier)
+
+x_stdev = np.std(x_verdier)
+y_stdev = np.std(y_verdier)
+
+print("Gjennomsnitt x:", x_snitt)
+print("Gjennomsnitt y:", y_snitt)
+print("Standardavvik x:", x_stdev)
+print("Standardavvik y:", y_stdev)
+
+# Korrelasjon mellom x og y
+correlation = np.corrcoef(x_verdier, y_verdier)[0, 1]
+print("Korrelasjon mellom x og y:", correlation)
+
+Relativ_usikkerhet_x = x_stdev/abs(x_snitt)*100
+Relativ_usikkerhet_y = y_stdev/abs(y_snitt)*100
+print("Relativ usikkerhet x: ", Relativ_usikkerhet_x)
+print("Relativ usikkerhet y: ", Relativ_usikkerhet_y)
+
+# Kryssplott
+sns.scatterplot(x=x_verdier, y=y_verdier, alpha=0.5)
+plt.xlabel("x-posisjon")
+plt.ylabel("y-posisjon")
+plt.title("Simulerte (x, y)-posisjoner")
+plt.show()
